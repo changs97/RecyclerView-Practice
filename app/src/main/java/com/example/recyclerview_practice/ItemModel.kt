@@ -1,4 +1,4 @@
-package com.example.recyclerview_practice.model
+package com.example.recyclerview_practice
 
 data class ItemModel (
     val name : String,

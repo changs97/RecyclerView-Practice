@@ -2,10 +2,12 @@ package com.example.recyclerview_practice
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.recyclerview_practice.model.ItemModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { com.example.recyclerview_practice.databinding.ActivityMainBinding.inflate(layoutInflater)}
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             add(ItemModel("아리","010-1234-1234"))
             add(ItemModel("달이","010-1234-1234"))
         }
-        customAdapter = CustomAdapter(::onChangeIsChecked)
+        customAdapter = CustomAdapter(::onChangeIsChecked, ::moveItem, ::removeItem)
         customAdapter.submitList(dataSet)
 
         binding.recyclerview.apply {
@@ -55,6 +57,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun onChangeIsChecked(itemAtIndex: Int, itemAtPosition: ItemModel)  {
         customAdapter.currentList[itemAtIndex].isChecked = !itemAtPosition.isChecked
+    }
+
+    private fun moveItem(fromPosition: Int, toPosition: Int) {
+        val newList = customAdapter.currentList.toMutableList()
+        Collections.swap(newList, fromPosition, toPosition)
+        customAdapter.submitList(newList)
+    }
+
+    private fun removeItem(position: Int) {
+        val newList = customAdapter.currentList.toMutableList()
+        newList.removeAt(position)
+        customAdapter.submitList(newList)
     }
 
 }

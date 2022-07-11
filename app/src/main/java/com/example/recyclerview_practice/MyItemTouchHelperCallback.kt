@@ -13,7 +13,7 @@ class MyItemTouchHelperCallback(private val recyclerView: RecyclerView) :
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        (recyclerView.adapter as CustomAdapter).moveItem(
+        (viewHolder as MyViewHolder).onMoveItem(
             viewHolder.adapterPosition,
             target.adapterPosition
         )
@@ -21,7 +21,7 @@ class MyItemTouchHelperCallback(private val recyclerView: RecyclerView) :
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        (recyclerView.adapter as CustomAdapter).removeItem(viewHolder.layoutPosition)
+        (viewHolder as MyViewHolder).onRemoveItem(viewHolder.layoutPosition)
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {

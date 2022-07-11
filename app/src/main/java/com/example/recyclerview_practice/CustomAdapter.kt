@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerview_practice.databinding.LayoutItemBinding
-import com.example.recyclerview_practice.model.ItemModel
-import java.util.*
+
 
 class CustomAdapter(
-    private val onChangeIsChecked: (itemAtIndex: Int, itemAtPosition: ItemModel) -> Unit
+    private val onChangeIsChecked: (itemAtIndex: Int, itemAtPosition: ItemModel) -> Unit,
+    private val onMoveItem: (fromPosition: Int, toPosition: Int) -> Unit,
+    private val onRemoveItem: (itemAtIndex: Int) -> Unit
     ) : ListAdapter<ItemModel, MyViewHolder>(MyDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -19,7 +19,14 @@ class CustomAdapter(
             onItemClick = { position ->
                 val itemAtPosition = currentList[position]
                 this.onChangeIsChecked(position, itemAtPosition)
-            })
+            },
+            onMoveItem = { fromPosition, toPosition ->
+                this.onMoveItem(fromPosition, toPosition)
+            },
+            onRemoveItem = { position ->
+                this.onRemoveItem(position)
+            }
+        )
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) = holder.bind(getItem(position))
@@ -34,16 +41,5 @@ class CustomAdapter(
         }
     }
 
-    fun moveItem(fromPosition: Int, toPosition: Int) {
-        val newList = currentList.toMutableList()
-        Collections.swap(newList, fromPosition, toPosition)
-        submitList(newList)
-    }
-
-    fun removeItem(position: Int) {
-        val newList = currentList.toMutableList()
-        newList.removeAt(position)
-        submitList(newList)
-    }
 }
 

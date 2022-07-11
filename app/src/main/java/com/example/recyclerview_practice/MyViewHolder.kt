@@ -2,11 +2,13 @@ package com.example.recyclerview_practice
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerview_practice.databinding.LayoutItemBinding
-import com.example.recyclerview_practice.model.ItemModel
 
 class MyViewHolder(
     private val binding: LayoutItemBinding,
     private val onItemClick: (position: Int) -> Unit,
+    val onMoveItem: (fromPosition: Int, toPosition: Int) -> Unit,
+    val onRemoveItem: (position: Int) -> Unit
+
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: ItemModel) {
