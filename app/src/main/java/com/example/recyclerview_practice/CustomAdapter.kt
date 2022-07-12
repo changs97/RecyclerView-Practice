@@ -7,24 +7,20 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.recyclerview_practice.databinding.LayoutItemBinding
 
 
-class CustomAdapter(
-    private val onChangeIsChecked: (itemAtIndex: Int, itemAtPosition: ItemModel) -> Unit,
-    private val onMoveItem: (fromPosition: Int, toPosition: Int) -> Unit,
-    private val onRemoveItem: (itemAtIndex: Int) -> Unit
-    ) : ListAdapter<ItemModel, MyViewHolder>(MyDiffUtil) {
+class CustomAdapter(private val viewModel: MyViewModel) : ListAdapter<ItemModel, MyViewHolder>(MyDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(
             LayoutItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onItemClick = { position ->
                 val itemAtPosition = currentList[position]
-                this.onChangeIsChecked(position, itemAtPosition)
+                viewModel.onChangeIsChecked(position, itemAtPosition)
             },
             onMoveItem = { fromPosition, toPosition ->
-                this.onMoveItem(fromPosition, toPosition)
+                viewModel.moveItem(fromPosition, toPosition)
             },
             onRemoveItem = { position ->
-                this.onRemoveItem(position)
+                viewModel.removeItem(position)
             }
         )
     }

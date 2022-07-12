@@ -2,16 +2,15 @@ package com.example.recyclerview_practice
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { com.example.recyclerview_practice.databinding.ActivityMainBinding.inflate(layoutInflater)}
-    private lateinit var dataSet: ArrayList<ItemModel>
-    private lateinit var customAdapter: CustomAdapter
+    private val viewModel : MyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,55 +18,25 @@ class MainActivity : AppCompatActivity() {
 
         setRecyclerView()
 
-        binding.btn.setOnClickListener {
-            setDataSet(customAdapter.currentList.shuffled())
-        }
+        viewModel.getData().observe(this, androidx.lifecycle.Observer {
+            viewModel.getCustomAdapter().submitList(it)
+            Log.d("테스트", it.toString())
+        })
 
+        binding.btn.setOnClickListener {
+            viewModel.shuffleItem()
+        }
     }
 
     private fun setRecyclerView() {
-        dataSet = arrayListOf<ItemModel>().apply {
-            add(ItemModel("초코","010-1234-1234"))
-            add(ItemModel("코난","010-1234-1234"))
-            add(ItemModel("키키","010-1234-1234"))
-            add(ItemModel("코코","010-1234-1234"))
-            add(ItemModel("치치","010-1234-1234"))
-            add(ItemModel("아리","010-1234-1234"))
-            add(ItemModel("달이","010-1234-1234"))
-        }
-        customAdapter = CustomAdapter(::onChangeIsChecked, ::moveItem, ::removeItem)
-        customAdapter.submitList(dataSet)
-
         binding.recyclerview.apply {
             layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = customAdapter
+            adapter = viewModel.getCustomAdapter()
         }
 
         val itemTouchHelper = ItemTouchHelper(MyItemTouchHelperCallback(binding.recyclerview))
         itemTouchHelper.attachToRecyclerView(binding.recyclerview)
-
     }
-
-    private fun setDataSet(newData : List<ItemModel>) {
-        customAdapter.submitList(newData)
-    }
-
-    private fun onChangeIsChecked(itemAtIndex: Int, itemAtPosition: ItemModel)  {
-        customAdapter.currentList[itemAtIndex].isChecked = !itemAtPosition.isChecked
-    }
-
-    private fun moveItem(fromPosition: Int, toPosition: Int) {
-        val newList = customAdapter.currentList.toMutableList()
-        Collections.swap(newList, fromPosition, toPosition)
-        customAdapter.submitList(newList)
-    }
-
-    private fun removeItem(position: Int) {
-        val newList = customAdapter.currentList.toMutableList()
-        newList.removeAt(position)
-        customAdapter.submitList(newList)
-    }
-
 }
