@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.recyclerview_practice.databinding.LayoutItemBinding
 
 
-class CustomAdapter(private val viewModel: MyViewModel) : ListAdapter<ItemModel, MyViewHolder>(MyDiffUtil) {
+class CustomAdapter(private val viewModel: ItemEvent) : ListAdapter<ItemModel, MyViewHolder>(MyDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(

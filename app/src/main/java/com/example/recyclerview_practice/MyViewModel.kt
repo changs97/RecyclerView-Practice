@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MyViewModel : ViewModel() {
+class MyViewModel : ViewModel(), ItemEvent{
     private lateinit var customAdapter : CustomAdapter
     private val _dataSet : MutableLiveData<ArrayList<ItemModel>> = MutableLiveData()
     private val dataSet : LiveData<ArrayList<ItemModel>>
@@ -39,23 +39,23 @@ class MyViewModel : ViewModel() {
 
     fun getData() = dataSet
 
-    fun onChangeIsChecked(itemAtIndex: Int, itemAtPosition: ItemModel)  {
+    override fun onChangeIsChecked(itemAtIndex: Int, itemAtPosition: ItemModel)  {
         customAdapter.currentList[itemAtIndex].isChecked = itemAtPosition.isChecked.not()
     }
 
-    fun moveItem(fromPosition: Int, toPosition: Int) {
+    override fun moveItem(fromPosition: Int, toPosition: Int) {
         val newList = customAdapter.currentList.toMutableList()
         Collections.swap(newList, fromPosition, toPosition)
         setDataSet(newList)
     }
 
-    fun removeItem(position: Int) {
+    override fun removeItem(position: Int) {
         val newList = customAdapter.currentList.toMutableList()
         newList.removeAt(position)
         setDataSet(newList)
     }
 
-    fun shuffleItem() {
+    override fun shuffleItem() {
         val newList = customAdapter.currentList.shuffled()
         setDataSet(newList)
     }
