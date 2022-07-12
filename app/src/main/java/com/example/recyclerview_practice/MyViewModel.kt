@@ -1,5 +1,6 @@
 package com.example.recyclerview_practice
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.*
@@ -7,8 +8,9 @@ import kotlin.collections.ArrayList
 
 class MyViewModel : ViewModel() {
     private lateinit var customAdapter : CustomAdapter
-    private val dataSet : MutableLiveData<ArrayList<ItemModel>> = MutableLiveData()
-
+    private val _dataSet : MutableLiveData<ArrayList<ItemModel>> = MutableLiveData()
+    private val dataSet : LiveData<ArrayList<ItemModel>>
+    get() = _dataSet
     init {
         val initDataSet = arrayListOf<ItemModel>().apply {
             add(ItemModel("초코","010-1234-1234"))
@@ -30,9 +32,9 @@ class MyViewModel : ViewModel() {
 
     fun getCustomAdapter() = customAdapter
 
-    private fun setDataSet(dataSet : List<ItemModel>) {
-        this.dataSet.value = dataSet as ArrayList<ItemModel>
-        customAdapter.submitList(dataSet)
+    private fun setDataSet(newList : List<ItemModel>) {
+        this._dataSet.value = newList as ArrayList<ItemModel>
+        customAdapter.submitList(newList)
     }
 
     fun getData() = dataSet
